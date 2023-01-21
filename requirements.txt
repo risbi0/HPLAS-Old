@@ -1,0 +1,6 @@
+google_api_python_client==2.72.0
+isodate==0.6.1
+numpy==1.22.2
+pandas==1.4.0
+python-dotenv==0.21.0
+pytz==2021.3
