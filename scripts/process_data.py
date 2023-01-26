@@ -1,4 +1,5 @@
 from variables import HOLOPRO, curr_file_path, livestream_details
+from multiprocessing import Process, Queue
 from datetime import datetime, timedelta
 from pytz import timezone
 from time import perf_counter
@@ -65,8 +66,7 @@ def consecutive(data):
     
     return out.strip().replace(' ', ', ')
 
-def main():
-    print(f'========================={NAME.upper()}=========================')
+def main(NAME):
     # initialize variables
     heatmap_data = [[0 for _ in range(1440)] for _ in range(7)]
     weekday_data = [0 for _ in range(7)]
@@ -86,8 +86,6 @@ def main():
         title = detail['title']
         stream_date = detail['date']
         vid_dur = detail['duration']
-
-        print(f"Processing: {title}")
 
         start_iso = datetime.strptime(stream_date, '%Y-%m-%dT%H:%M:%S.%fZ').replace(tzinfo=timezone('UTC')).astimezone(timezone('Asia/Tokyo'))
         end_iso = start_iso + timedelta(seconds=vid_dur)
@@ -197,11 +195,24 @@ def main():
 
     df.to_csv(os.path.join(curr_file_path, '../output/data.csv'), sep='\t')
 
+def dequeue(queue):
+    while queue.qsize() > 0:
+        holomem = queue.get()
+        print(f'Processing: {holomem}')
+        main(holomem)
+
 if __name__ == '__main__':
     start = perf_counter()
-   
+     
+    queue = Queue()
     for holomem in HOLOPRO:
-        NAME = holomem
-        main()
+        queue.put(holomem)
+
+    processes = [Process(target=dequeue, args=(queue,)) for _ in range(os.cpu_count())]
+    for process in processes:
+        process.start()
+
+    for process in processes:
+        process.join()
 
     print(f'Done. Time took: {round(perf_counter() - start, 2)} seconds.')
