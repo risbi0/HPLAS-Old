@@ -4,7 +4,7 @@ from pytz import timezone
 from time import perf_counter
 import pandas as pd
 import numpy as np
-import os, glob, json, calendar
+import os, glob, calendar
 
 def timings(time):
     weekday = time.weekday() + 1
