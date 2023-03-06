@@ -1,4 +1,6 @@
-# Hololive Production Talent Livestreams Timeline Heatmap and Related Statistics
+# HPLAS-Old
+
+**NOTE**: This is the old version that uses Excel for data visualization. The updated version uses Streamlit and Plotly which is published [here](https://github.com/risbi0/Hololive-Production-Livestream-Activity-Statistics).
 
 Data was gathered using [Holodex API](https://holodex.stoplight.io/) with the [holodex.js](https://github.com/HolodexNet/holodex.js) library. Python for data manipulation. MS Excel for visualization with VBA to automate the generation of heatmaps and most of the charts.
 
